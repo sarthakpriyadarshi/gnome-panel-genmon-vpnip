@@ -1,0 +1,12 @@
+{
+  "uuid": "gnome-panel-genmon-vpnip@cyberol.codes",
+  "name": "Kali Track",
+  "description": "Displays the VPN IP address in the top bar when a VPN connection is active. Click to copy the IP address to the clipboard.",
+  "version": 1,
+  "shell-version": [
+    "47"
+  ],
+  "url": "https://github.com/sarthakpriyadarshi",
+  "settings-schema": "org.gnome.shell.extensions.vpnipindicator"
+}
+

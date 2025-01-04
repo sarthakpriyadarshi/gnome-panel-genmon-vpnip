@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.vpn-ip-indicator" path="/org/gnome/shell/extensions/vpn-ip-indicator/">
+    <key name="refresh-interval" type="i">
+      <summary>Refresh Interval</summary>
+      <description>Interval in seconds to refresh the VPN IP address display.</description>
+      <default>5</default>
+    </key>
+    <key name="vpn-interface" type="s">
+      <summary>VPN Interface</summary>
+      <description>Name of the VPN interface to check for an IP address.</description>
+      <default>"tun0"</default>
+    </key>
+  </schema>
+</schemalist>

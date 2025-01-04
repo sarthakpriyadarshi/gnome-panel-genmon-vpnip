@@ -1,0 +1,10 @@
+{
+  "uuid": "gnome-panel-vpnip@cyberol.codes",
+  "name": "VPN IP Indicator",
+  "description": "Displays the VPN IP address in the top bar when a VPN connection is active. Click to copy the IP address to the clipboard.",
+  "version": 1,
+  "shell-version": [
+    "47"
+  ],
+  "url": "https://your-extension-url.com"
+}
