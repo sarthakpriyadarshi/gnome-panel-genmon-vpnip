@@ -20,7 +20,7 @@ Clone the project
 Copy the Extension
 
 ```bash
-  cp -R gnome-panel-genmon-vpnip ~/.local/share/gnome-shell/extensions/gnome-panel-genmon-vpnip@cyberol.codes
+  cp -R gnome-panel-genmon-vpnip ~/.local/share/gnome-shell/extensions/top-panel-genmon-vpnip@cyberol.codes
 ```
 
 ### Restart Gnome Shell
