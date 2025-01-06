@@ -1,14 +1,28 @@
 import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
 
-export const getVpnIp = () => {
-    const vpnInterfaceCommand = "ip tuntap show | cut -d : -f1 | head -n 1 | | cut -d':' -f1";
-    const vpnInterfaceBytes = GLib.spawn_command_line_sync(vpnInterfaceCommand)[1];
-    const vpnInterface = vpnInterfaceBytes ? String.fromCharCode.apply(null, vpnInterfaceBytes).split(':')[0].trim() : '';
+Gio._promisify(Gio.Subprocess.prototype, 'communicate_utf8_async');
 
-    const ipCommand = `bash -c "ip a s ${vpnInterface} 2>/dev/null | grep -o -P '(?<=inet )[0-9]{1,3}(\\.[0-9]{1,3}){3}'"`;
-    const [result, output] = GLib.spawn_command_line_sync(ipCommand);
+export const getVpnIp = async () => {
+    const vpnInterfaceCommand = ['bash', '-c', "ip tuntap show | cut -d : -f1 | head -n 1 | cut -d':' -f1"];
+    const vpnInterfaceProc = new Gio.Subprocess({
+        argv: vpnInterfaceCommand,
+        flags: Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE,
+    });
+    vpnInterfaceProc.init(null);
+    const [vpnInterfaceOutput] = await vpnInterfaceProc.communicate_utf8_async(null, null);
+    const vpnInterface = vpnInterfaceOutput.trim();
+    if (!vpnInterface) {
+        return '';
+    }
 
-    const vpnIp = output;
+    const ipCommand = ['bash', '-c', `ip a s ${vpnInterface} 2>/dev/null | grep -o -P '(?<=inet )[0-9]{1,3}(\\.[0-9]{1,3}){3}'`];
+    const ipProc = new Gio.Subprocess({
+        argv: ipCommand,
+        flags: Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE,
+    });
+    ipProc.init(null);
+    const [ipOutput] = await ipProc.communicate_utf8_async(null, null);
 
-    return new TextDecoder().decode(vpnIp).trim();
+    return ipOutput.trim();
 };

@@ -10,7 +10,7 @@ const DEBUG_LOG = false;
 
 function debugLog(message) {
     if (DEBUG_LOG) {
-        log(message);
+        console.log(message);
     }
 }
 
@@ -55,42 +55,59 @@ export const VPNIPAddressIndicator = GObject.registerClass(
         _updateLabel() {
             const priority = 0;
             const refreshTime = 5;
-
+        
             if (this._timeout) {
                 GLib.source_remove(this._timeout);
                 this._timeout = undefined;
             }
-
-            this._timeout = GLib.timeout_add_seconds(priority, refreshTime, () => {
-                const vpnIp = Utils.getVpnIp();
-                debugLog(`VPN Indicator says: ${vpnIp}`);
-
-                if (vpnIp) {
-                    this.buttonText.set_text(vpnIp);
-                    this.box.remove_child(this.defaultIcon);
-                    this.box.add_child(this.vpnIcon);
-                    this.box.add_child(this.buttonText);
-                    this.connect('button-press-event', () => {
-                        St.Clipboard.get_default().set_text(St.ClipboardType.CLIPBOARD, vpnIp);
-                        debugLog(`Copied VPN IP to clipboard: ${vpnIp}`);
-                    });
-                } else {
-                    this.buttonText.set_text('No VPN IP');
-                    this.box.remove_child(this.vpnIcon);
-                    this.box.add_child(this.defaultIcon);
+        
+            this._timeout = GLib.timeout_add_seconds(priority, refreshTime, async () => {
+                try {
+                    const vpnIp = await Utils.getVpnIp(); 
+                    debugLog(`VPN Indicator says: ${vpnIp}`);
+        
+                    if (vpnIp) {
+                        this.buttonText.set_text(vpnIp);
+                        if (this.box.contains(this.defaultIcon)) {
+                            this.box.remove_child(this.defaultIcon);
+                        }
+                        if (!this.box.contains(this.vpnIcon)) {
+                            this.box.add_child(this.vpnIcon);
+                        }
+                        if (!this.box.contains(this.buttonText)) {
+                            this.box.add_child(this.buttonText);
+                        }
+                        this.connect('button-press-event', () => {
+                            St.Clipboard.get_default().set_text(St.ClipboardType.CLIPBOARD, vpnIp);
+                            debugLog(`Copied VPN IP to clipboard: ${vpnIp}`);
+                        });
+                    } else {
+                        if (this.box.contains(this.buttonText)) {
+                            this.box.remove_child(this.buttonText);
+                        }
+                        if (this.box.contains(this.vpnIcon)) {
+                            this.box.remove_child(this.vpnIcon);
+                        }
+                        if (!this.box.contains(this.defaultIcon)) {
+                            this.box.add_child(this.defaultIcon);
+                        }
+                    }
+                } catch (error) {
+                    debugLog(`Error updating VPN IP: ${error.message}`);
                 }
-
+        
                 return GLib.SOURCE_CONTINUE;
             });
-        }
+        }        
 
-        stop() {
+        destroy() {
             if (this._timeout) {
                 GLib.source_remove(this._timeout);
             }
             this._timeout = undefined;
             this.menu.removeAll();
             debugLog("VPNIPAddressIndicator stopped.");
+            super.destroy();
         }
     }
 );
