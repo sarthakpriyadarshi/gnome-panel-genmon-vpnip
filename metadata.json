@@ -4,7 +4,7 @@
   "name": "Kali Track",
   "settings-schema": "org.gnome.shell.extensions.vpn-ip-indicator",
   "shell-version": [
-    "47"
+    "47", "48"
   ],
   "url": "https://github.com/sarthakpriyadarshi/gnome-panel-genmon-vpnip/",
   "uuid": "top-panel-genmon-vpnip@cyberol.codes",
