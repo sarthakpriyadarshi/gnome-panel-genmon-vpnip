@@ -8,6 +8,9 @@ I am one of those who was pursuing OSCP and loves Gnome, when Kali moved to XFCE
 
 So, I created this Gnome Extension that displays the VPN IP address in the top bar when a VPN connection is active at the same time you can click to copy the IP address to the clipboard. 
 
+## Gnome 48 Update
+
+![Gnome 48 Update](https://github.com/sarthakpriyadarshi/gnome-panel-genmon-vpnip/blob/master/images/Gnome%2048.png?raw=true)
 
 ## Run Locally
 
