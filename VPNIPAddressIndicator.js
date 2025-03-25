@@ -28,7 +28,7 @@ export const VPNIPAddressIndicator = GObject.registerClass(
             });
 
             this.defaultIcon = new St.Icon({
-                icon_name: 'network-wired',
+                icon_name: 'network-vpn-acquiring',
                 icon_size: 16,
                 style_class: 'system-status-icon'
             });
